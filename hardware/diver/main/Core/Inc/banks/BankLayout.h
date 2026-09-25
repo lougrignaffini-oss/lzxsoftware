@@ -3,7 +3,6 @@
 #include "math_utils.h"
 #include "perlin.h"
 #include "NewBanks.h"
-#include "ShapeBank.h"
 
 #include <cmath>
 
@@ -158,13 +157,13 @@ DiverBankBase* banks[] = {
         nullptr
     ),
     // --- New banks below (see NewBanks.h) ---
-    newBanks.LogisticMap,     // 9  - Logistic Map Bifurcation
-    newBanks.Weierstrass,     // 10 - Weierstrass Function
-    newBanks.Takagi,          // 11 - Takagi (Blancmange) Function
-    newBanks.ThueMorse,       // 12 - Thue-Morse Bit-Parity
-    newBanks.ElementaryCA,    // 13 - Elementary Cellular Automaton
-    &heartShapeBank,          // 14 - Heart (true-2D, see ShapeBank.h -- UNVERIFIED timing, read the header notes)
-    &starShapeBank,           // 15 - Star  (true-2D, see ShapeBank.h -- UNVERIFIED timing, read the header notes)
-    newBanks.MandelbrotSlice, // 16 - Mandelbrot Slice
-    newBanks.JuliaSlice       // 17 - Julia Slice
+    // Heart/Star (ShapeBank.h) are left out until the true-2D path is
+    // reworked -- see the notes at the top of ShapeBank.h.
+    newBanks.LogisticMap,     // 10 - Logistic Map Bifurcation
+    newBanks.Weierstrass,     // 11 - Weierstrass Function
+    newBanks.Takagi,          // 12 - Takagi (Blancmange) Function
+    newBanks.ThueMorse,       // 13 - Thue-Morse Bit-Parity
+    newBanks.ElementaryCA,    // 14 - Elementary Cellular Automaton
+    newBanks.MandelbrotSlice, // 15 - Mandelbrot Slice
+    newBanks.JuliaSlice       // 16 - Julia Slice
     };

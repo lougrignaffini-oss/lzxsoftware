@@ -1,6 +1,26 @@
 #ifndef __SHAPEBANK_H__
 #define __SHAPEBANK_H__
 
+// *** NOT CURRENTLY WIRED INTO banks[] (BankLayout.h) ***
+// Audit against the stock firmware found blocking problems with the
+// per-line approach below; it needs reworking before it is re-enabled:
+//   - Interlace: linecnt runs across the whole frame (both fields), so
+//     linecnt / band_lines draws the top half of the shape in one field and
+//     the bottom half in the other, interleaved. WavePlusLUT reorders its
+//     vertical data (interlace_mode) for exactly this reason.
+//   - ISR budget: a line is ~63.5us (~6.9k cycles at 108MHz) -- the 48.6us
+//     below is only the active part. RegenerateRow() x2 on a band change is
+//     ~1k float interpolations (~40k cycles, several lines) inside the
+//     priority-0 EXTI handler, so hsyncs are missed and linecnt drifts.
+//   - Buffers: OnInterruptFrameStart/OnOddField never swap buffers or write
+//     hphase_cv, so the DMA start offset (data_transmitted_handler) is left
+//     over from the previous bank; and writing hwave[waveReadPtr] from the
+//     hsync ISR races the DMA already streaming that buffer (and overwrites
+//     the hwave[hres + HBLANK] slot that carries the V-DAC word).
+// Likely direction: build the whole frame in OnOddField into
+// hwave/vwave/hphase_cv[waveWritePtr] with interlace-aware row mapping and
+// swap in OnInterruptFrameStart, like WavePlusLUT.
+
 // Static shape banks (Heart, Star) -- the ONE pair of banks in this set
 // that needs the "true 2D" architecture instead of the additive H(x)+V(y)
 // model every other bank uses. A heart/star silhouette isn't separable as
